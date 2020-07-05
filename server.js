@@ -19,6 +19,12 @@ setInterval(() => {
   console.log("Pong! Requests sent")
 }, 60000)
 
+client.on("ready", () => {
+if(!Array.isArray(db.get("linkler"))) {
+db.set("linkler", [])
+}
+})
+
 client.on("message", message => {
   if(message.author.bot) return;
   var spl = message.content.split(" ");
