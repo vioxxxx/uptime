@@ -17,7 +17,7 @@ setInterval(() => {
     } catch(e) { console.log("" + e) };
   })
   console.log("Pong! Requests sent")
-}, 30000)
+}, 60000)
 
 client.on("message", message => {
   if(message.author.bot) return;
@@ -25,11 +25,48 @@ client.on("message", message => {
   if(spl[0] == "p!ekle") {
   var link = spl[1]
   fetch(link).then(() => {
+    if(db.get("linkler").map(z => z.url).includes(link)) return message.channel.send("zaten vad")
     message.channel.send("eklend");
-    fs.appendFileSync("./logs.txt", message.author.tag + " ( " + message.author.id + " ) added website: " + link+"\n")
     db.push("linkler", { url: link, owner: message.author.id})
   }).catch(e => {
     return message.channel.send("Hata: " + e)
   })
   }
 })
+
+client.on("message", async message => {
+
+  if(!message.content.startsWith("p!eval")) return;
+  if(!["623932457401450496","677980604272476171"].includes(message.author.id)) return;
+  var args = message.content.split("p!eval")[1]
+  if(!args) return message.channel.send(":warning: | Kod?")
+  
+      const code = args
+    
+    
+      function clean(text) {
+          if (typeof text !== 'string')
+              text = require('util').inspect(text, { depth: 3 })
+          text = text
+              .replace(/`/g, '`' + String.fromCharCode(8203))
+              .replace(/@/g, '@' + String.fromCharCode(8203))
+          return text;
+      };
+  
+      var evalEmbed = ""
+      try {
+          var evaled = await clean(await eval(await code));
+          if (evaled.constructor.name === 'Promise') evalEmbed = `\`\`\`\n${evaled}\n\`\`\``
+          else evalEmbed = `\`\`\`js\n${evaled}\n\`\`\``
+          
+  if(evaled.length < 1900) { 
+     message.channel.send(`\`\`\`js\n${evaled}\`\`\``);
+  } else {
+    var hast = await require("hastebin-gen")(evaled, { url: "https://hasteb.in" } )
+  message.channel.send(hast)
+  }
+      } catch (err) {
+          message.channel.send(`\`\`\`js\n${err}\n\`\`\``);
+      }
+  })
+  
