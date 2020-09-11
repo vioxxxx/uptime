@@ -20,7 +20,7 @@ setInterval(() => {
 }, 60000)
 
 client.on("ready", () => {
-if(!Array.isArray(db.get("linkler"))) {
+if(!Array.isArray(db.get("https://handy-lucky-hygienic.glitch.me/"))) {
 db.set("linkler", [])
 }
 })
