@@ -8,7 +8,7 @@ const fetch = require("node-fetch");
 const fs = require('fs')
 
 setInterval(() => {
-  var links = db.get("linkler");
+  var links = db.get("https://bright-fluffy-print.glitch.me");
   if(!links) return;
   var linkA = links.map(c => c.url)
   linkA.forEach(link => {
@@ -20,7 +20,7 @@ setInterval(() => {
 }, 60000)
 
 client.on("ready", () => {
-if(!Array.isArray(db.get("linkler"))) {
+if(!Array.isArray(db.get("https://handy-lucky-hygienic.glitch.me/"))) {
 db.set("linkler", [])
 }
 })
